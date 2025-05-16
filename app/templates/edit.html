@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Task</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="row g-2 align-items-center mb-3">
+        <div class="col-md-3">
+            <label class="form-label" for="title">Title</label>
+            {{ form.title(class="form-control", id="title") }}
+            {% for error in form.title.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label" for="due_date">Due Date</label>
+            {{ form.due_date(class="form-control", id="due_date", type="date") }}
+            {% for error in form.due_date.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-3">
+            <label class=" form-label" for="user_id">Assigned To</label>
+            {{ form.user_id(class="form-select", id="user_id") }}
+            {% for error in form.user_id.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label" for="priority">Priority</label>
+            {{ form.priority(class="form-select", id="priority") }}
+            {% for error in form.priority.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label class="form-label" for="description">Description</label>
+            {{ form.description(class="form-control", id="description", rows="2") }}
+            {% for error in form.description.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-3">{{ form.submit.label.text }}</button>
+    <a href="{{ url_for('task_bp.index') }}" class="btn btn-secondary mb-3">Cancel</a>
+</form>
+{% endblock %}

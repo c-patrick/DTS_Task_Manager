@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HMCTS Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('task_bp.index') }}">HMCTS Task Manager</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <!-- <a class="nav-item nav-link" href="{{ url_for('task_bp.index') }}">Home</span></a> -->
+                <a class="nav-item nav-link" href="{{ url_for('task_bp.manage_users') }}">User Management</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Flash messages container fixed at bottom center -->
+    <div id="flash-messages" style="
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1055;
+    width: auto;
+    max-width: 90%;
+    min-width: 300px;
+  ">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }} alert-dismissible fade show"
+            role="alert" style="position: relative; padding-bottom: 1rem;"> <!-- extra space for bar -->
+
+            <div>{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                style="position: absolute; "></button>
+
+            <!-- Progress bar container -->
+            <div class="progress" style="
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            border-radius: 0 0 0.25rem 0.25rem;
+            overflow: hidden;
+          ">
+                <div class="progress-bar bg-secondary" role="progressbar"
+                    style="width: 100%; transition: width 4s linear;" aria-valuenow="100" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const alerts = document.querySelectorAll('#flash-messages .alert');
+
+            alerts.forEach((alert) => {
+                const progressBar = alert.querySelector('.progress-bar');
+
+                if (!progressBar) return;
+
+                // Start shrinking the progress bar
+                // We use CSS transition defined above (4s linear)
+                // Trigger layout so transition happens
+                progressBar.style.width = '100%';
+                void progressBar.offsetWidth; // force reflow
+
+                // Shrink to 0% over 4 seconds
+                progressBar.style.width = '0%';
+
+                // Close alert after 4 seconds (4000ms)
+                setTimeout(() => {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    bsAlert.close();
+                }, 4000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
